@@ -46,3 +46,11 @@ vim.keymap.set("n", "<leader>t", function()
     vim.cmd("Neotree toggle")
   end
 end, { desc = "Open or Focus Neo-tree, Return to Last Buffer" })
+local neoscroll = require("neoscroll")
+
+vim.keymap.set("n", "j", function()
+  neoscroll.scroll(1, true, 10)
+end, { desc = "Smooth Down" })
+vim.keymap.set("n", "k", function()
+  neoscroll.scroll(-1, true, 10)
+end, { desc = "Smooth Up" })
