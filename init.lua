@@ -4,36 +4,6 @@ require("config.lazy")
 -- Load LuaSnip snippets from VSCode-style files
 require("luasnip.loaders.from_vscode").lazy_load({ paths = { "~/.config/nvim/snippets" } })
 
--- Safe require for `nvim-cmp`
-local ok, cmp = pcall(require, "cmp")
-if not ok then
-  print("nvim-cmp not found! Run :Lazysync")
-  return
-end
-
-local luasnip = require("luasnip")
-
-cmp.setup({
-  snippet = {
-    expand = function(args)
-      luasnip.lsp_expand(args.body)
-    end,
-  },
-
-  mapping = {
-    ["<C-k>"] = cmp.mapping.select_prev_item(), -- Move up
-    ["<C-j>"] = cmp.mapping.select_next_item(), -- Move down
-    ["<Down>"] = cmp.mapping.select_next_item(), -- Move down (arrow)
-    ["<Up>"] = cmp.mapping.select_prev_item(), -- Move up (arrow)
-    ["<CR>"] = cmp.mapping.confirm({ select = true }), -- Insert with Enter
-  },
-
-  sources = {
-    { name = "luasnip" },
-    { name = "buffer" },
-    { name = "path" },
-  },
-})
 -- make background transparent
 vim.cmd([[
   " General UI transparency
