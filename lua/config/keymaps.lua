@@ -1,6 +1,8 @@
 -- Keymaps are automatically loaded on the VeryLazy event
 -- Default keymaps that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/keymaps.lua
 -- Add any additional keymaps here
+local ls = require("luasnip")
+local set = vim.keymap.set
 
 -- Save buffer
 vim.keymap.set("n", "<leader>bs", "<cmd>w<cr>", { desc = "Save Buffer" })
@@ -54,3 +56,26 @@ end, { desc = "Smooth Down" })
 vim.keymap.set("n", "k", function()
   neoscroll.scroll(-1, true, 10)
 end, { desc = "Smooth Up" })
+
+vim.keymap.set({ "i" }, "<C-K>", function()
+  ls.expand()
+end, { silent = true })
+vim.keymap.set({ "i", "s" }, "<C-L>", function()
+  ls.jump(1)
+end, { silent = true })
+vim.keymap.set({ "i", "s" }, "<C-J>", function()
+  ls.jump(-1)
+end, { silent = true })
+
+vim.keymap.set({ "i", "s" }, "<C-E>", function()
+  if ls.choice_active() then
+    ls.change_choice(1)
+  end
+end, { silent = true })
+-- Switch to buffer 1-9 with CTRL+1 to CTRL+9
+for i = 1, 9 do
+  vim.keymap.set("n", "<C-" .. i .. ">", ":buffer " .. i .. "<CR>", { noremap = true, silent = true })
+end
+
+-- Close all buffers except the current one with CTRL+R
+vim.keymap.set("n", "<C-r>", ":%bd|e#|bd#<CR>", { noremap = true, silent = true })
