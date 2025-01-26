@@ -3,21 +3,28 @@ return {
     "nvim-neo-tree/neo-tree.nvim",
     dependencies = { "nvim-lua/plenary.nvim", "nvim-tree/nvim-web-devicons" },
     cmd = "Neotree",
+
     opts = {
-      filesystem = { -- Show the opened file in the file explorer
-        bind_to_cwd = false, -- Prevent Neo-tree from changing directories automatically
-        cwd = vim.fn.getcwd(), -- Start Neo-tree in the directory where Neovim was opened
-        filtered_items = {
-          visible = true, -- Show hidden files (toggle with `H`)
-        },
+      filesystem = {
+        bind_to_cwd = false,
+        cwd = vim.fn.getcwd(),
+        filtered_items = { visible = true },
         window = {
           mappings = {
-            ["n"] = "add", -- New file
-            ["N"] = "add_directory", -- New folder
-            ["r"] = "rename", -- Rename
-            ["d"] = "delete", -- Delete
-            ["q"] = "close_window", -- Close Neo-tree
+            ["n"] = "add",
+            ["N"] = "add_directory",
+            ["r"] = "rename",
+            ["d"] = "delete",
+            ["q"] = "close_window",
           },
+        },
+      },
+      event_handlers = {
+        {
+          event = "file_opened",
+          handler = function()
+            require("neo-tree.command").execute({ action = "close" })
+          end,
         },
       },
     },

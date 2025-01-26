@@ -15,7 +15,7 @@ vim.keymap.set("n", "U", "<C-r>", { desc = "Redo" })
 
 local last_buffer = nil -- Store the last active buffer
 
-vim.keymap.set("n", "<leader>t", function()
+vim.keymap.set("n", "<leader>e", function()
   local win_list = vim.api.nvim_list_wins()
   local neotree_win = nil
   local current_win = vim.api.nvim_get_current_win()
