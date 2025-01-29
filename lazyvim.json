@@ -1,6 +1,7 @@
 {
   "extras": [
-
+    "lazyvim.plugins.extras.editor.harpoon2",
+    "lazyvim.plugins.extras.ui.treesitter-context"
   ],
   "news": {
     "NEWS.md": "10960"
