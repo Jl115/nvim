@@ -1,11 +1,7 @@
 -- Autocmds are automatically loaded on the VeryLazy event
 -- Default autocmds that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/autocmds.lua
---
--- Add any additional autocmds here
--- with `vim.api.nvim_create_autocmd`
---
--- Or remove existing autocmds by their group name (which is prefixed with `lazyvim_` for the defaults)
--- e.g. vim.api.nvim_del_augroup_by_name("lazyvim_wrap_spell")
+
+-- Set up transparency for UI elements
 vim.cmd([[
   " General UI transparency
   highlight Normal guibg=NONE ctermbg=NONE
@@ -45,22 +41,88 @@ vim.cmd([[
   highlight PmenuSel guibg=NONE ctermbg=NONE
   highlight InlayHint guibg=NONE ctermbg=NONE
   highlight CursorLine guibg=NONE ctermbg=NONE
+
+  " Additional UI elements transparency
+  highlight SignColumn guibg=NONE ctermbg=NONE
+  highlight LineNr guibg=NONE ctermbg=NONE
+  highlight CursorLineNr guibg=NONE ctermbg=NONE
+  highlight FoldColumn guibg=NONE ctermbg=NONE
+  highlight Folded guibg=NONE ctermbg=NONE
+  
+  " Floating windows transparency
+  highlight FloatBorder guibg=NONE ctermbg=NONE
+  highlight FloatShadow guibg=NONE ctermbg=NONE
+  highlight FloatShadowThrough guibg=NONE ctermbg=NONE
+  
+  " Search and selection transparency
+  highlight Search guibg=NONE ctermbg=NONE
+  highlight IncSearch guibg=NONE ctermbg=NONE
+  highlight Visual guibg=NONE ctermbg=NONE
+  highlight VisualNOS guibg=NONE ctermbg=NONE
+
+  " Message area transparency
+  highlight MsgArea guibg=NONE ctermbg=NONE
+  highlight MoreMsg guibg=NONE ctermbg=NONE
+  highlight ErrorMsg guibg=NONE ctermbg=NONE
+  highlight WarningMsg guibg=NONE ctermbg=NONE
 ]])
+local orig_buf_set_extmark = vim.api.nvim_buf_set_extmark
+vim.api.nvim_buf_set_extmark = function(buf, ns, row, col, opts)
+  local ok, ret = pcall(orig_buf_set_extmark, buf, ns, row, col, opts)
+  if not ok then
+    return nil
+  end
+  return ret
+end
+-- Store original inlay hint function
 local lsp_inlay_hint = vim.lsp.inlay_hint
 
--- Temporarily disable inlay hints during save and linting
+-- Create autocommand group for inlay hints
+local inlay_hints_group = vim.api.nvim_create_augroup("InlayHintsToggle", { clear = true })
+
+-- Toggle function for inlay hints
 local function toggle_inlay_hints(enable)
-  vim.lsp.inlay_hint = enable and lsp_inlay_hint or function() end
+  if enable then
+    local safe_inlay_hint = {}
+    setmetatable(safe_inlay_hint, {
+      __call = function(_, ...)
+        local ok, ret = pcall(lsp_inlay_hint, ...)
+        return ret
+      end,
+      __index = lsp_inlay_hint,
+    })
+    vim.lsp.inlay_hint = safe_inlay_hint
+  else
+    local noop = {}
+    setmetatable(noop, {
+      __call = function() end,
+      __index = lsp_inlay_hint,
+    })
+    vim.lsp.inlay_hint = noop
+  end
 end
 
--- Autocommands for disabling inlay hints on save and linting
+-- Autocommands for text changes
+vim.api.nvim_create_autocmd({ "TextChanged", "TextChangedI" }, {
+  group = inlay_hints_group,
+  callback = function()
+    toggle_inlay_hints(false)
+    vim.defer_fn(function()
+      toggle_inlay_hints(true)
+    end, 100)
+  end,
+})
+
+-- Autocommands for file operations
 vim.api.nvim_create_autocmd("BufWritePre", {
+  group = inlay_hints_group,
   callback = function()
     toggle_inlay_hints(false)
   end,
 })
 
 vim.api.nvim_create_autocmd("BufWritePost", {
+  group = inlay_hints_group,
   callback = function()
     toggle_inlay_hints(true)
   end,

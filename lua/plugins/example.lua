@@ -31,10 +31,36 @@ return {
   -- override nvim-cmp and add cmp-emoji
   {
     "hrsh7th/nvim-cmp",
-    dependencies = { "hrsh7th/cmp-emoji" },
+    dependencies = { "hrsh7th/cmp-emoji", "L3MON4D3/LuaSnip" },
+    optional = true,
     ---@param opts cmp.ConfigSchema
     opts = function(_, opts)
-      table.insert(opts.sources, { name = "emoji" })
+      local cmp = require("cmp")
+      
+      opts.sources = {
+        { name = "luasnip", priority = 1000 },
+        { name = "nvim_lsp", priority = 900 },
+        { name = "path", priority = 800 },
+        { name = "buffer", priority = 700 },
+        { name = "emoji", priority = 600 },
+        { name = "copilot", priority = 100 }
+
+      }
+      
+      opts.sorting = {
+        priority_weight = 3, -- Increased from 2 to 3
+        comparators = {
+          cmp.config.compare.offset,
+          cmp.config.compare.exact,
+          cmp.config.compare.priority, -- Move priority up
+          cmp.config.compare.score,
+          cmp.config.compare.recently_used,
+          cmp.config.compare.locality,
+          cmp.config.compare.kind,
+          cmp.config.compare.length,
+          cmp.config.compare.order,
+        },
+      }
     end,
   },
 
@@ -63,27 +89,27 @@ return {
 
   -- add pyright to lspconfig
   -- add more treesitter parsers
-  {
-    "nvim-treesitter/nvim-treesitter",
-    opts = {
-      ensure_installed = {
-        "bash",
-        "html",
-        "javascript",
-        "json",
-        "lua",
-        "markdown",
-        "markdown_inline",
-        "python",
-        "query",
-        "regex",
-        "tsx",
-        "typescript",
-        "vim",
-        "yaml",
-      },
-    },
-  },
+  -- {
+  --   "nvim-treesitter/nvim-treesitter",
+  --   opts = {
+  --     ensure_installed = {
+  --       "bash",
+  --       "html",
+  --       "javascript",
+  --       "json",
+  --       "lua",
+  --       "markdown",
+  --       "markdown_inline",
+  --       "python",
+  --       "query",
+  --       "regex",
+  --       "tsx",
+  --       "typescript",
+  --       "vim",
+  --       "yaml",
+  --     },
+  --   },
+  -- },
 
   -- since `vim.tbl_deep_extend`, can only merge tables and not lists, the code above
   -- would overwrite `ensure_installed` with the new value.
@@ -95,6 +121,24 @@ return {
       vim.list_extend(opts.ensure_installed, {
         "tsx",
         "typescript",
+        "javascript",
+        "json",
+        "yaml",
+        "html",
+        "css",
+        "scss",
+        "lua",
+        "bash",
+        "regex",
+        "query",
+        "markdown",
+        "vue",
+        "python",
+        "rust",
+        "toml",
+        "go",
+        "graphql",
+        "lua"
       })
     end,
   },
