@@ -6,6 +6,20 @@ return {
     vim.list_extend(opts.sources, {
       -- Prettier for formatting
       null_ls.builtins.formatting.prettier.with({
+        extra_args = function(params)
+          local util = require("lspconfig.util")
+          local config = util.search_ancestors(params.bufname, function(dir)
+            if vim.fn.filereadable(dir .. "/.prettierrc") == 1 then
+              return dir .. "/.prettierrc"
+            elseif vim.fn.filereadable(dir .. "/prettier.config.js") == 1 then
+              return dir .. "/prettier.config.js"
+            end
+          end)
+          if config then
+            return { "--config", config }
+          end
+          return {}
+        end,
         condition = function(utils)
           return utils.root_has_file(".prettierrc") or utils.root_has_file("prettier.config.js")
         end,

@@ -48,6 +48,18 @@ return {
       setup = {
         -- example to setup with typescript.nvim
         tsserver = function(_, opts)
+          local util = require("lspconfig.util")
+          opts.root_dir = function(fname)
+            local js_root = util.search_ancestors(fname, function(dir)
+              if vim.fn.filereadable(dir .. "/jsconfig.json") == 1 then
+                return dir
+              end
+            end)
+            if js_root then
+              return js_root
+            end
+            return util.root_pattern("package.json", "tsconfig.json", ".git")(fname)
+          end
           require("typescript").setup({ server = opts })
           return true
         end,
@@ -61,4 +73,15 @@ return {
   -- treesitter, mason and typescript.nvim. So instead of the above, you can use:
   { import = "lazyvim.plugins.extras.lang.typescript" },
   { import = "lazyvim.plugins.extras.lang.json" },
+
+  -- Add LSP support for Dart and Rust
+  {
+    "neovim/nvim-lspconfig",
+    opts = {
+      servers = {
+        dartls = {},           -- Dart language server
+        rust_analyzer = {},    -- Rust language server
+      },
+    },
+  },
 }

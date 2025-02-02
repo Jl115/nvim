@@ -55,10 +55,6 @@ vim.cmd([[
   highlight FloatShadowThrough guibg=NONE ctermbg=NONE
   
   " Search and selection transparency
-  highlight Search guibg=NONE ctermbg=NONE
-  highlight IncSearch guibg=NONE ctermbg=NONE
-  highlight Visual guibg=NONE ctermbg=NONE
-  highlight VisualNOS guibg=NONE ctermbg=NONE
 
   " Message area transparency
   highlight MsgArea guibg=NONE ctermbg=NONE
