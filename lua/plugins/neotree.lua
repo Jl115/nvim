@@ -2,9 +2,20 @@ return {
   "nvim-neo-tree/neo-tree.nvim",
   dependencies = {
     "nvim-lua/plenary.nvim",
-    "nvim-tree/nvim-web-devicons", -- not strictly required, but recommended
+    "nvim-tree/nvim-web-devicons", -- Not strictly required, but recommended
   },
   opts = {
+    filesystem = {
+      filtered_items = {
+        visible = true, -- Show hidden files
+        hide_dotfiles = false,
+        hide_gitignored = false,
+      },
+      follow_current_file = {
+        enabled = true,
+      },
+      hijack_netrw_behavior = "open_default",
+    },
     window = {
       close_on_open = true,
     },
@@ -27,5 +38,11 @@ return {
         end,
       },
     },
+    default_component_configs = {
+      indent = {
+        with_expanders = true, -- Ensure folders can always expand
+      },
+    },
+    root = vim.fn.getcwd(), -- Set root to the current working directory
   },
 }
