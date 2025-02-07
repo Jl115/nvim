@@ -18,6 +18,7 @@ return {
     },
     window = {
       close_on_open = true,
+      width = 60,
     },
     event_handlers = {
       {

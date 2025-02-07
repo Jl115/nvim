@@ -11,8 +11,6 @@ local map = vim.keymap.set
 -- Basic Editing & Navigation
 map("n", "<C-f>", "<cmd>Telescope find_files<cr>", { desc = "Find Files" })
 map("n", "<C-b>", "<cmd>Neotree toggle<cr>", { desc = "Toggle File Tree" })
-map("n", "<Up>", "yyp", { desc = "Duplicate line above" })
-map("n", "<Down>", "yyP", { desc = "Duplicate line below" })
 map("n", "<leader>j", "<cmd>m .+1<cr>==", { desc = "Move line down" })
 map("n", "<leader>k", "<cmd>m .-2<cr>==", { desc = "Move line up" })
 map("n", "<leader>d", '"_d', { desc = "Delete without copying" })
@@ -27,7 +25,6 @@ map("n", "<leader>bp", "<cmd>bp<cr>", { desc = "Previous buffer" })
 map("n", "<leader>bd", "<cmd>bd<cr>", { desc = "Close buffer" })
 map("n", "<leader>ba", "<cmd>%bd|e#<cr>", { desc = "Close all buffers except current" })
 map("n", "<leader>vs", "<cmd>vsplit<cr>", { desc = "Vertical split" })
-map("n", "<leader>hs", "<cmd>split<cr>", { desc = "Horizontal split" })
 map("n", "<C-w>m", "<cmd>MaximizerToggle<cr>", { desc = "Toggle maximize split" })
 
 -- Terminal & UI
