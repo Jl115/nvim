@@ -1,5 +1,6 @@
 return {
   "echasnovski/mini.files",
+  lazy = false,
   opts = function(_, opts)
     opts.mappings = vim.tbl_deep_extend("force", opts.mappings or {}, {
       close = "q",
