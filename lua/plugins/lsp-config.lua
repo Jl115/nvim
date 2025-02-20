@@ -1,6 +1,7 @@
 return {
   {
     "neovim/nvim-lspconfig",
+    lazy = false,
     dependencies = {
       "jose-elias-alvarez/typescript.nvim",
     },
